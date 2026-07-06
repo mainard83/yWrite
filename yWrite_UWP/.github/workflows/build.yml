@@ -1,4 +1,4 @@
-name: Build yWrite UWP 
+name: Build yWrite UWP
 
 on:
   push:
