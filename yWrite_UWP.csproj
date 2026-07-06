@@ -7,13 +7,13 @@
     <Platforms>x64</Platforms>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
-    <!-- Unpackaged + single file -->
     <WindowsPackageType>None</WindowsPackageType>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-    <!-- ⚠️ Required for .pri generation even in unpackaged mode -->
     <EnableMsixTooling>true</EnableMsixTooling>
+    <!-- ✅ Explicit Windows SDK version -->
+    <WindowsSdkPackageVersion>10.0.26100.1742</WindowsSdkPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
