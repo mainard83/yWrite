@@ -1,5 +1,0 @@
-<Page x:Class="yWrite_UWP.MainPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid>
-        <WebView x:Name="webView" NavigationCompleted="OnNavigationCompleted" />
-    </Grid>
-</Page>
