@@ -12,8 +12,6 @@
     <SelfContained>true</SelfContained>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <!-- ✅ Explicit Windows SDK version -->
-    <WindowsSdkPackageVersion>10.0.26100.1742</WindowsSdkPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
