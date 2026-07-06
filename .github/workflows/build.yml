@@ -22,7 +22,10 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: '8.0.402'   # ✅ specific version required by Windows App SDK
+
+    - name: Verify .NET SDK version
+      run: dotnet --version
 
     - name: Restore dependencies
       run: dotnet restore yWrite_UWP.csproj
