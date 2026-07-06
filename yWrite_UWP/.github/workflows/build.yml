@@ -1,0 +1,41 @@
+name: Build yWrite UWP
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        configuration: [Release]
+        platform: [x64]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    # 🔍 List files to see where everything is (debug step)
+    - name: List repository contents
+      run: dir /s
+
+    - name: Restore dependencies
+      run: dotnet restore yWrite_UWP.csproj
+
+    - name: Build and Publish
+      run: dotnet publish yWrite_UWP.csproj -c ${{ matrix.configuration }} -p:Platform=${{ matrix.platform }} -p:RuntimeIdentifier=win-x64 -o ./publish
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: yWrite-${{ matrix.platform }}-${{ matrix.configuration }}
+        path: ./publish/
