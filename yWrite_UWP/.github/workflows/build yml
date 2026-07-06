@@ -32,7 +32,7 @@ jobs:
     - name: Build and Publish
       run: |
         cd yWrite
-        dotnet publish -c ${{ matrix.configuration }} -p:Platform=${{ matrix.platform }} -p:RuntimeIdentifier=win10-${{ matrix.platform }} -o ../publish
+        dotnet publish -c ${{ matrix.configuration }} -p:Platform=${{ matrix.platform }} -p:RuntimeIdentifier=win-x64 -o ../publish
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
