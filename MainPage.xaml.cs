@@ -1,11 +1,11 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.System;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace yWrite_UWP
 {
@@ -13,17 +13,18 @@ namespace yWrite_UWP
     {
         public MainPage()
         {
-            this.InitializeComponent();
-            webView.Source = new Uri("ms-appx:///index.html");
+            InitializeComponent();
+            Loaded += OnLoaded;
         }
 
-        private async void OnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (args.IsSuccess)
-            {
-                webView.Focus(FocusState.Programmatic);
-                this.KeyDown += OnKeyDown;
-            }
+            // Load the HTML file as a string and display it
+            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///index.html"));
+            var html = await FileIO.ReadTextAsync(file);
+            webView.NavigateToString(html);
+            webView.Focus(FocusState.Programmatic);
+            this.KeyDown += OnKeyDown;
         }
 
         private async void OnKeyDown(object sender, KeyRoutedEventArgs e)
@@ -35,8 +36,8 @@ namespace yWrite_UWP
                 {
                     case VirtualKey.N:
                         e.Handled = true;
-                        await webView.InvokeScriptAsync("eval", new string[] { "document.getElementById('wrap').innerText = '';" });
-                        await webView.InvokeScriptAsync("eval", new string[] { "document.getElementById('wrap').dispatchEvent(new Event('input'));" });
+                        await webView.InvokeScriptAsync("eval", new[] { "document.getElementById('wrap').innerText = '';" });
+                        await webView.InvokeScriptAsync("eval", new[] { "document.getElementById('wrap').dispatchEvent(new Event('input'));" });
                         break;
                     case VirtualKey.O:
                         e.Handled = true;
@@ -61,8 +62,8 @@ namespace yWrite_UWP
             {
                 var text = await FileIO.ReadTextAsync(file);
                 var escaped = text.Replace("`", "\\`").Replace("${", "\\${");
-                await webView.InvokeScriptAsync("eval", new string[] { $"document.getElementById('wrap').innerText = `{escaped}`;" });
-                await webView.InvokeScriptAsync("eval", new string[] { "document.getElementById('wrap').dispatchEvent(new Event('input'));" });
+                await webView.InvokeScriptAsync("eval", new[] { $"document.getElementById('wrap').innerText = `{escaped}`;" });
+                await webView.InvokeScriptAsync("eval", new[] { "document.getElementById('wrap').dispatchEvent(new Event('input'));" });
             }
         }
 
@@ -76,7 +77,7 @@ namespace yWrite_UWP
             var file = await picker.PickSaveFileAsync();
             if (file != null)
             {
-                var content = await webView.InvokeScriptAsync("eval", new string[] { "document.getElementById('wrap').innerText" });
+                var content = await webView.InvokeScriptAsync("eval", new[] { "document.getElementById('wrap').innerText" });
                 await FileIO.WriteTextAsync(file, content);
             }
         }
