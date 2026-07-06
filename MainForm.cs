@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.WinForms;
 
@@ -29,7 +30,16 @@ namespace yWrite
         private async void InitializeWebView()
         {
             await webView.EnsureCoreWebView2Async(null);
-            webView.CoreWebView2.NavigateToString(Properties.Resources.index_html); // we'll embed index.html as resource
+            string htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "index.html");
+            if (File.Exists(htmlPath))
+            {
+                string htmlContent = File.ReadAllText(htmlPath);
+                webView.CoreWebView2.NavigateToString(htmlContent);
+            }
+            else
+            {
+                webView.CoreWebView2.NavigateToString("<h1>index.html not found</h1>");
+            }
             webView.Focus();
             this.KeyDown += OnKeyDown;
         }
@@ -64,7 +74,7 @@ namespace yWrite
                 openFileDialog.RestoreDirectory = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    string content = System.IO.File.ReadAllText(openFileDialog.FileName);
+                    string content = File.ReadAllText(openFileDialog.FileName);
                     string escaped = content.Replace("`", "\\`").Replace("${", "\\${");
                     await webView.ExecuteScriptAsync($"document.getElementById('wrap').innerText = `{escaped}`; document.getElementById('wrap').dispatchEvent(new Event('input'));");
                 }
@@ -81,7 +91,7 @@ namespace yWrite
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string content = await webView.ExecuteScriptAsync("document.getElementById('wrap').innerText");
-                    System.IO.File.WriteAllText(saveFileDialog.FileName, content);
+                    File.WriteAllText(saveFileDialog.FileName, content);
                 }
             }
         }
